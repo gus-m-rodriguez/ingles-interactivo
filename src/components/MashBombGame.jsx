@@ -451,19 +451,20 @@ export default function MashBombGame() {
 
   // Game over y récord
   useEffect(() => {
-    if (score > record && record > 0 && !confettiShown) {
+    if (score > record) {
       setRecord(score);
       localStorage.setItem('mash_record', score);
+    }
+    // Confetti y lógica visual se mantiene igual
+    if (score > record && record > 0 && !confettiShown) {
       setShowConfetti(true);
       setConfettiShown(true);
       setTimeout(() => setShowConfetti(false), 1800);
     } else if (score > record && record === 0) {
-      setRecord(score);
-      localStorage.setItem('mash_record', score);
       setConfettiShown(true);
       // No mostrar confeti si el récord anterior era 0
     }
-  }, [score, record, confettiShown]);
+  }, [score]);
 
   // Resetear confettiShown al reiniciar el juego
   useEffect(() => {
