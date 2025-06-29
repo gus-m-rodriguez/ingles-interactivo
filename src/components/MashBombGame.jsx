@@ -160,7 +160,7 @@ function playGoldenSound() {
   const o = ctx.createOscillator();
   const g = ctx.createGain();
   o.type = 'sine';
-  o.frequency.value = 1320; // Nota más alta para bomba dorada
+  o.frequency.value = 1320;
   g.gain.value = 0.15;
   o.connect(g).connect(ctx.destination);
   o.start();
@@ -173,7 +173,7 @@ function playPointsSound() {
   const o = ctx.createOscillator();
   const g = ctx.createGain();
   o.type = 'square';
-  o.frequency.value = 660; // Nota media para puntos
+  o.frequency.value = 660;
   g.gain.value = 0.12;
   o.connect(g).connect(ctx.destination);
   o.start();
@@ -186,7 +186,7 @@ function playBurnedSound() {
   const o = ctx.createOscillator();
   const g = ctx.createGain();
   o.type = 'sawtooth';
-  o.frequency.value = 220; // Nota más baja para bomba quemada
+  o.frequency.value = 220;
   g.gain.value = 0.12;
   o.connect(g).connect(ctx.destination);
   o.start();
@@ -364,18 +364,22 @@ export default function MashBombGame() {
                 const puntosPremio = Math.floor(objetivo * 0.1);
                 scoreRef.current += puntosPremio;
                 setScore(scoreRef.current);
+                playPointsSound();
               } else {
                 setVidas(prev => Math.min(prev + 1, 4));
+                playGoldenSound();
               }
             } else if (b.tipo === 'quemada') {
               const nuevasVidas = vidas - 1;
               setVidas(nuevasVidas);
+              playBurnedSound();
               if (nuevasVidas <= 0) {
                 setRazonDerrota('Sin vidas restantes');
                 setGameOver(true);
               }
             } else {
               atrapadasEnEsteFrame++;
+              playCatchSound();
             }
             continue;
           }
@@ -449,18 +453,17 @@ export default function MashBombGame() {
   // Game over y récord
   useEffect(() => {
     // Guardar récord en localStorage si el score lo supera
+    const prevRecord = Number(localStorage.getItem('mash_record') || 0);
     const maxRecord = getMaxRecord();
-    if (maxRecord > Number(localStorage.getItem('mash_record') || 0)) {
-      localStorage.setItem('mash_record', maxRecord);
-      setRecord(maxRecord);
-    }
-    // Confetti visual
-    if (score > record && record > 0 && !confettiShown) {
+    // Mostrar confeti solo si el score supera el récord anterior
+    if (score > prevRecord && !confettiShown) {
       setShowConfetti(true);
       setConfettiShown(true);
       setTimeout(() => setShowConfetti(false), 1800);
-    } else if (score > record && record === 0) {
-      setConfettiShown(true);
+    }
+    if (maxRecord > prevRecord) {
+      localStorage.setItem('mash_record', maxRecord);
+      setRecord(maxRecord);
     }
   }, [score, record, confettiShown]);
 
