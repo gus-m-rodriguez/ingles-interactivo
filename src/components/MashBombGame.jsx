@@ -219,7 +219,8 @@ export default function MashBombGame() {
   const [score, setScore] = useState(0);
   const [nivel, setNivel] = useState(1);
   const [pregunta, setPregunta] = useState(null);
-  const [record, setRecord] = useState(() => Number(localStorage.getItem('mash_record') || 0));
+  const recordRef = useRef(Number(localStorage.getItem('mash_record') || 0));
+  const [record, setRecord] = useState(recordRef.current);
   const [gameOver, setGameOver] = useState(false);
   const [objetivo, setObjetivo] = useState(objetivoPorNivel(1));
   const [velocidad, setVelocidad] = useState(2);
@@ -359,35 +360,26 @@ export default function MashBombGame() {
           if (atrapada) {
             // Manejar bombas especiales
             if (b.tipo === 'dorada') {
-              // Bomba dorada: recuperar vida o sumar puntos si vidas completas
               if (vidas >= 4) {
-                // Si las vidas están completas, sumar puntos como premio
-                const puntosPremio = Math.floor(objetivo * 0.1); // 10% del objetivo
+                const puntosPremio = Math.floor(objetivo * 0.1);
                 scoreRef.current += puntosPremio;
                 setScore(scoreRef.current);
-                playPointsSound();
               } else {
-                // Si no están completas, recuperar vida
                 setVidas(prev => Math.min(prev + 1, 4));
-                playGoldenSound();
               }
             } else if (b.tipo === 'quemada') {
-              // Bomba quemada: perder vida
               const nuevasVidas = vidas - 1;
               setVidas(nuevasVidas);
-              playBurnedSound();
               if (nuevasVidas <= 0) {
                 setRazonDerrota('Sin vidas restantes');
                 setGameOver(true);
               }
             } else {
-              // Bomba normal: sumar puntaje
               atrapadasEnEsteFrame++;
             }
             continue;
           }
           if (!b.atrapada && nuevaY > GAME_HEIGHT + 40) {
-            // Solo contar bombas normales como caídas
             if (b.tipo === 'normal') {
               caidasEnEsteFrame++;
             }
@@ -396,9 +388,14 @@ export default function MashBombGame() {
           nuevos.push({ ...b, y: nuevaY });
         }
         if (atrapadasEnEsteFrame > 0) {
-          playCatchSound();
           scoreRef.current += atrapadasEnEsteFrame;
           setScore(scoreRef.current);
+          // ACTUALIZAR RECORD EN TIEMPO REAL
+          if (scoreRef.current > recordRef.current) {
+            recordRef.current = scoreRef.current;
+            setRecord(scoreRef.current);
+            localStorage.setItem('mash_record', scoreRef.current);
+          }
         }
         if (caidasEnEsteFrame > 0) {
           setBombasCaidas(prev => {
@@ -451,20 +448,15 @@ export default function MashBombGame() {
 
   // Game over y récord
   useEffect(() => {
-    if (score > record) {
-      setRecord(score);
-      localStorage.setItem('mash_record', score);
-    }
-    // Confetti y lógica visual se mantiene igual
+    // Solo confetti y visual, el guardado ya es inmediato
     if (score > record && record > 0 && !confettiShown) {
       setShowConfetti(true);
       setConfettiShown(true);
       setTimeout(() => setShowConfetti(false), 1800);
     } else if (score > record && record === 0) {
       setConfettiShown(true);
-      // No mostrar confeti si el récord anterior era 0
     }
-  }, [score]);
+  }, [score, record, confettiShown]);
 
   // Resetear confettiShown al reiniciar el juego
   useEffect(() => {
