@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Instructivos (no committear)
+INSTRUCTIVO_INGLES_INTERACTIVO.md
+INSTRUCTIVO_INGLES_INTERACTIVO.pdf
+INSTRUCTIVO_INGLES_INTERACTIVO.html
