@@ -448,7 +448,13 @@ export default function MashBombGame() {
 
   // Game over y récord
   useEffect(() => {
-    // Solo confetti y visual, el guardado ya es inmediato
+    // Guardar récord en localStorage si el score lo supera
+    const maxRecord = getMaxRecord();
+    if (maxRecord > Number(localStorage.getItem('mash_record') || 0)) {
+      localStorage.setItem('mash_record', maxRecord);
+      setRecord(maxRecord);
+    }
+    // Confetti visual
     if (score > record && record > 0 && !confettiShown) {
       setShowConfetti(true);
       setConfettiShown(true);
@@ -596,7 +602,7 @@ export default function MashBombGame() {
     // Récord
     ctx.font = 'bold 22px Arial';
     ctx.fillStyle = '#f59e42';
-    ctx.fillText(`Récord: ${record}`, 320, 32);
+    ctx.fillText(`Récord: ${getMaxRecord()}`, 320, 32);
     // Puntaje / objetivo
     ctx.font = 'bold 18px Arial';
     ctx.fillStyle = '#0ea5e9';
@@ -614,6 +620,15 @@ export default function MashBombGame() {
     ctx.fillText('🔥 Quemada = -1 vida', 20, 125);
   }, [bombs, mashX, mashImg, bombImg, bombGoldImg, bombDarkImg, nivel, score, record, objetivo, iniciado, vidas]);
 
+  // Helper para obtener el récord real
+  function getMaxRecord() {
+    return Math.max(
+      score,
+      Number(localStorage.getItem('mash_record') || 0),
+      record
+    );
+  }
+
   if (loading) {
     return <div className="text-pink-600 font-bold text-xl">Cargando imágenes...</div>;
   }
@@ -622,7 +637,7 @@ export default function MashBombGame() {
     return (
       <div className="flex flex-col items-center gap-4">
         <button onClick={handleIniciar} className="px-6 py-3 bg-pink-500 text-white rounded-xl font-bold text-xl shadow hover:bg-pink-700">Iniciar juego</button>
-        <div className="text-lg text-pink-700 font-bold">Nivel: {hayGuardado && avanceGuardado ? avanceGuardado.nivel : 1} &nbsp; | &nbsp; Récord: {record}</div>
+        <div className="text-lg text-pink-700 font-bold">Nivel: {hayGuardado && avanceGuardado ? avanceGuardado.nivel : 1} &nbsp; | &nbsp; Récord: {getMaxRecord()}</div>
       </div>
     );
   }
@@ -692,7 +707,7 @@ export default function MashBombGame() {
             <div className="mb-2 text-pink-700 font-bold text-lg">¡Juego terminado!</div>
             <div className="mb-2 text-red-600 font-bold text-sm">{razonDerrota}</div>
             <div className="mb-2 text-blue-700 font-bold">Puntaje: {score}</div>
-            <div className="mb-2 text-yellow-600 font-bold">Récord: {record}</div>
+            <div className="mb-2 text-yellow-600 font-bold">Récord: {getMaxRecord()}</div>
             <div className="mb-2 text-purple-600 font-bold">Vidas restantes: {generarVidasVisuales(vidas)}</div>
             <button onClick={handleReiniciar} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 font-bold">Reiniciar</button>
           </div>
