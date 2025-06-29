@@ -1,4 +1,7 @@
 import React from "react";
+import hanako from '../assets/hanako.webp';
+import harry from '../assets/harry.webp';
+import mash from '../assets/mash-comiendo.webp';
 
 export default function Bienvenida() {
   return (
@@ -12,7 +15,7 @@ export default function Bienvenida() {
         <div className="flex flex-col items-center">
           <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-pink-200 bg-white shadow-lg">
             <img
-              src="./src/assets/hanako.webp"
+              src={hanako}
               alt="Hanako-kun"
               className="w-full h-full object-cover"
             />
@@ -22,7 +25,7 @@ export default function Bienvenida() {
         <div className="flex flex-col items-center">
           <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-yellow-200 bg-white shadow-lg">
             <img
-              src="./src/assets/harry.webp"
+              src={harry}
               alt="Harry Potter"
               className="w-full h-full object-cover"
             />
@@ -32,7 +35,7 @@ export default function Bienvenida() {
         <div className="flex flex-col items-center">
           <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-blue-200 bg-white shadow-lg">
             <img
-              src="./src/assets/mash-comiendo.webp"
+              src={mash}
               alt="Mashle"
               className="w-full h-full object-cover"
             />

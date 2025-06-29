@@ -11,13 +11,13 @@ const temas = [
   { path: "/puntajes", label: "📊 Puntajes" },
 ];
 
-export default function NavBar() {
+export default function NavBar({ onLogout }) {
   const juegos = { path: "/juegos", label: "Juegos" };
 
   return (
     <nav className="bg-gradient-to-r from-pink-500 to-purple-600 shadow-lg">
       <div className="max-w-6xl mx-auto px-4">
-        <div className="flex flex-wrap gap-2 justify-center py-4">
+        <div className="flex flex-wrap gap-2 justify-center py-4 items-center">
           {temas.map((tema) => (
             <NavLink
               key={tema.path}
@@ -46,6 +46,14 @@ export default function NavBar() {
           >
             {juegos.label}
           </NavLink>
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              className="ml-4 px-4 py-2 rounded-lg font-bold bg-red-500 text-white hover:bg-red-700 transition shadow"
+            >
+              Cerrar sesión
+            </button>
+          )}
         </div>
       </div>
     </nav>
