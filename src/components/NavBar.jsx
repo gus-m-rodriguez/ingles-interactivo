@@ -3,11 +3,7 @@ import { NavLink } from "react-router-dom";
 
 const temas = [
   { path: "/", label: "🏠 Inicio" },
-  { path: "/tema1", label: "Tema 1" },
-  { path: "/tema2", label: "Tema 2" },
-  { path: "/tema3", label: "Tema 3" },
-  { path: "/tema4", label: "Tema 4" },
-  { path: "/final", label: "🏆 Desafío Final" },
+  { path: "/cuestionarios", label: "📝 Cuestionarios" },
   { path: "/puntajes", label: "📊 Puntajes" },
 ];
 

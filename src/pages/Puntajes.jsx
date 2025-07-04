@@ -5,7 +5,13 @@ const temas = [
   { key: 'tema2', label: 'Tema 2: Personal Information', total: 12 },
   { key: 'tema3', label: 'Tema 3: Countries & Nationalities', total: 12 },
   { key: 'tema4', label: 'Tema 4: Colours & Days', total: 12 },
+  { key: 'tema5', label: 'Tema 5: Más números y colores', total: 15 },
+  { key: 'tema6', label: 'Tema 6: Subject Pronouns / Verb to be', total: 15 },
+  { key: 'tema7', label: 'Tema 7: Verb to be – Questions', total: 15 },
+  { key: 'tema8', label: 'Tema 8: Writing Introduction and Possessives', total: 15 },
+  { key: 'tema9', label: 'Tema 9: Simple Present', total: 15 },
   { key: 'final', label: 'Desafío Final', total: 20 },
+  { key: 'final_ii', label: 'Desafío Final II', total: 40 },
 ];
 
 function getPuntajes() {
