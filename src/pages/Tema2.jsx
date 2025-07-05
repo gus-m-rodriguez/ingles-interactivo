@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Feedback from '../components/Feedback';
+import html2pdf from 'html2pdf.js';
+import '../pdf.css';
 
 const personajeEmoji = {
   'Harry Potter': '🧙‍♂️',
@@ -167,10 +169,73 @@ export default function Tema2() {
     setFeedback(nuevosFeedback);
   };
 
+  const handleDescargarPDF = () => {
+    const element = document.getElementById('pdf-cuestionario');
+    element.classList.remove('pdf-hidden');
+    html2pdf()
+      .set({
+        margin: 0.5,
+        filename: 'Tema2.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      })
+      .from(element)
+      .save()
+      .then(() => {
+        element.classList.add('pdf-hidden');
+      });
+  };
+
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <h1 className="text-3xl font-bold text-blue-600 mb-4">Tema 2: Personal Information</h1>
-      <div className="mb-4 text-right font-bold text-blue-700">Puntaje: {puntaje} / {actividades.length}</div>
+      <h1 className="text-3xl font-bold text-blue-600 mb-2">Tema 2: Personal Information</h1>
+      <div id="pdf-cuestionario" className="pdf-hidden">
+        <h1 className="text-3xl font-bold text-blue-600 mb-4">Tema 2: Personal Information</h1>
+        {actividades.map((act, idx) => (
+          <div key={idx} className="mb-6 bg-white rounded-lg shadow p-4">
+            <div className="flex items-center mb-2">
+              <span className="text-2xl mr-2">{personajeEmoji[act.personaje] || '❓'}</span>
+              <span className="font-semibold">{act.personaje} pregunta:</span>
+            </div>
+            <p className="mb-2">{act.pregunta}</p>
+            {act.tipo === 'opcion' ? (
+              <div className="flex flex-wrap gap-2">
+                {act.opciones.map((op, opIdx) => (
+                  <span
+                    key={opIdx}
+                    className="px-3 py-1 rounded border bg-blue-100 border-blue-300 text-gray-700"
+                    style={{ display: 'inline-block', minWidth: '80px', marginBottom: '4px' }}
+                  >
+                    {op}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={''}
+                  readOnly
+                  className="flex-1 px-3 py-1 border border-gray-300 rounded bg-gray-100"
+                  placeholder="Respuesta..."
+                  style={{ minWidth: '200px' }}
+                />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      <div className="flex items-center justify-between mb-4">
+        <div className="font-bold text-blue-700 text-base">Puntaje: {puntaje} / {actividades.length}</div>
+        <button
+          onClick={handleDescargarPDF}
+          className="px-3 py-1 bg-pink-500 text-white rounded-md font-semibold text-sm shadow hover:bg-pink-600 transition-all"
+          style={{ minWidth: '120px' }}
+        >
+          Descargar PDF
+        </button>
+      </div>
       {actividades.map((act, idx) => (
         <div key={idx} className="mb-6 bg-white rounded-lg shadow p-4">
           <div className="flex items-center mb-2">

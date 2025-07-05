@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Feedback from '../components/Feedback';
+import html2pdf from 'html2pdf.js';
+import '../pdf.css';
 
 const personajeEmoji = {
   'Harry Potter': '🧙‍♂️',
@@ -134,11 +136,169 @@ export default function Tema9() {
     setFeedback(nuevosFeedback);
   };
 
+  const handleDescargarPDF = () => {
+    const element = document.getElementById('pdf-cuestionario');
+    element.classList.remove('pdf-hidden');
+    html2pdf()
+      .set({
+        margin: 0.5,
+        filename: 'Tema9.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      })
+      .from(element)
+      .save()
+      .then(() => {
+        element.classList.add('pdf-hidden');
+      });
+  };
+
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <h1 className="text-3xl font-bold text-purple-600 mb-4">Tema 9: Simple Present</h1>
-      <div className="mb-4 text-right font-bold text-purple-700">Puntaje: {puntaje} / {actividades.length}</div>
-      {/* Tabla visual explicativa */}
+      <h1 className="text-3xl font-bold text-purple-600 mb-2">Tema 9: Simple Present</h1>
+      <div className="flex items-center justify-between mb-4">
+        <div className="font-bold text-purple-700 text-base">Puntaje: {puntaje} / {actividades.length}</div>
+        <button
+          onClick={handleDescargarPDF}
+          className="px-3 py-1 bg-pink-500 text-white rounded-md font-semibold text-sm shadow hover:bg-pink-600 transition-all"
+          style={{ minWidth: '120px' }}
+        >
+          Descargar PDF
+        </button>
+      </div>
+      <div id="pdf-cuestionario" className="pdf-hidden">
+        <h1 className="text-3xl font-bold text-purple-600 mb-4">Tema 9: Simple Present</h1>
+        <div className="mb-8">
+          <div className="bg-blue-50 rounded-lg shadow p-4 mb-4">
+            <h2 className="text-xl font-bold text-blue-700 mb-2">Presente Simple: Afirmativo</h2>
+            <table className="w-full text-center border mb-2">
+              <thead>
+                <tr className="bg-blue-100">
+                  <th className="p-2">Sujeto</th>
+                  <th className="p-2">Verbo</th>
+                  <th className="p-2">Complemento</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="p-2">I / You / We / They</td>
+                  <td className="p-2">play</td>
+                  <td className="p-2">the guitar</td>
+                </tr>
+                <tr>
+                  <td className="p-2">He / She / It</td>
+                  <td className="p-2">plays <span className="text-xs text-gray-500">(+s)</span></td>
+                  <td className="p-2">the guitar</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="bg-green-50 rounded-lg shadow p-4 mb-4">
+            <h2 className="text-xl font-bold text-green-700 mb-2">Presente Simple: Negativo</h2>
+            <table className="w-full text-center border mb-2">
+              <thead>
+                <tr className="bg-green-100">
+                  <th className="p-2">Sujeto</th>
+                  <th className="p-2">Auxiliar</th>
+                  <th className="p-2">Verbo</th>
+                  <th className="p-2">Complemento</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="p-2">I / You / We / They</td>
+                  <td className="p-2">don't</td>
+                  <td className="p-2">play</td>
+                  <td className="p-2">the guitar</td>
+                </tr>
+                <tr>
+                  <td className="p-2">He / She / It</td>
+                  <td className="p-2">doesn't</td>
+                  <td className="p-2">play</td>
+                  <td className="p-2">the guitar</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="bg-yellow-50 rounded-lg shadow p-4 mb-4">
+            <h2 className="text-xl font-bold text-yellow-700 mb-2">Presente Simple: Preguntas</h2>
+            <table className="w-full text-center border mb-2">
+              <thead>
+                <tr className="bg-yellow-100">
+                  <th className="p-2">Auxiliar</th>
+                  <th className="p-2">Sujeto</th>
+                  <th className="p-2">Verbo</th>
+                  <th className="p-2">Complemento</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="p-2">Do</td>
+                  <td className="p-2">you / we / they</td>
+                  <td className="p-2">play</td>
+                  <td className="p-2">the guitar?</td>
+                </tr>
+                <tr>
+                  <td className="p-2">Does</td>
+                  <td className="p-2">he / she / it</td>
+                  <td className="p-2">play</td>
+                  <td className="p-2">the guitar?</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="bg-pink-50 border-l-4 border-pink-400 rounded-lg shadow p-4 mb-4">
+            <h3 className="text-lg font-bold text-pink-700 mb-2">Aclaraciones sobre la <span className="font-mono">-s</span> en el presente simple</h3>
+            <ul className="list-disc ml-6 text-pink-900">
+              <li>El verbo lleva <b>-s</b> <b>solo</b> con <b>He/She/It</b> en afirmativo.<br/>Ej: <span className="font-mono">He plays</span>, <span className="font-mono">She eats</span></li>
+              <li>En negativo y preguntas, el verbo va en forma base.<br/>Ej: <span className="font-mono">He doesn't play</span>, <span className="font-mono">Does she eat?</span></li>
+              <li>Para preguntas, se usa <b>Do</b> o <b>Does</b> al inicio.</li>
+              <li className="mt-2"><b>Casos especiales para agregar <span className="font-mono">-es</span>:</b>
+                <ul className="list-disc ml-6">
+                  <li>Verbos que terminan en <b>-o, -ch, -sh, -ss, -x, -z</b>: se agrega <b>-es</b>.<br/>Ej: <span className="font-mono">go → goes</span>, <span className="font-mono">watch → watches</span>, <span className="font-mono">fix → fixes</span></li>
+                  <li>Verbos que terminan en <b>consonante + y</b>: se cambia la <b>y</b> por <b>i</b> y se agrega <b>-es</b>.<br/>Ej: <span className="font-mono">study → studies</span>, <span className="font-mono">try → tries</span></li>
+                  <li>Verbos que terminan en <b>vocal + y</b>: solo se agrega <b>-s</b>.<br/>Ej: <span className="font-mono">play → plays</span>, <span className="font-mono">enjoy → enjoys</span></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+        {actividades.map((act, idx) => (
+          <div key={idx} className="mb-6 bg-white rounded-lg shadow p-4">
+            <div className="flex items-center mb-2">
+              <span className="text-2xl mr-2">{personajeEmoji[act.personaje] || '❓'}</span>
+              <span className="font-semibold">{act.personaje} pregunta:</span>
+            </div>
+            <p className="mb-2">{act.pregunta}</p>
+            {act.tipo === 'opcion' ? (
+              <div className="flex flex-wrap gap-2">
+                {act.opciones.map((op, opIdx) => (
+                  <span
+                    key={opIdx}
+                    className="px-3 py-1 rounded border bg-blue-100 border-blue-300 text-gray-700"
+                    style={{ display: 'inline-block', minWidth: '80px', marginBottom: '4px' }}
+                  >
+                    {op}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={''}
+                  readOnly
+                  className="flex-1 px-3 py-1 border border-gray-300 rounded bg-gray-100"
+                  placeholder="Respuesta..."
+                  style={{ minWidth: '200px' }}
+                />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      {/* Bloque de información para la web */}
       <div className="mb-8">
         <div className="bg-blue-50 rounded-lg shadow p-4 mb-4">
           <h2 className="text-xl font-bold text-blue-700 mb-2">Presente Simple: Afirmativo</h2>
